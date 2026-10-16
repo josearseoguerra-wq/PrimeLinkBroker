@@ -21,7 +21,17 @@ public/                ← ÚNICA carpeta que se publica
 README.md              ← NO se publica
 ```
 
-## Despliegue (Cloudflare Pages)
+## Despliegue actual (GitHub Pages)
+
+El workflow `.github/workflows/pages.yml` publica **solo** `public/` en cada push a `main`
+que modifique esa carpeta. Requiere repo público (plan gratuito) y
+Settings → Pages → Source: **GitHub Actions**. GitHub Pages ignora `_headers`;
+la CSP por `<meta>` sí aplica.
+
+## Despliegue futuro (Cloudflare Pages)
+
+Al migrar: borrar `.github/workflows/pages.yml`, despublicar GitHub Pages y poner el repo en privado.
+
 
 - Framework preset: **None** · Build command: *(vacío)* · Build output directory: **`public`**
 - El archivo `public/_headers` aplica CSP, HSTS, X-Frame-Options, etc.
