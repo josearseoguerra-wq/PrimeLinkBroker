@@ -1,52 +1,50 @@
-# Prime Commercial Link / United Trade Solutions — sitio estático bilingüe
+# UTS - PCL — sitio estático bilingüe
 
-Portal informativo estático (HTML/CSS/JS puro, sin build ni frameworks) para
-**United Trade Solutions LLC** y **Prime Commercial Link LLC**. Inglés por
-defecto, con selector EN/ES persistente (localStorage).
+Portal informativo estático (HTML/CSS/JS puro, sin build ni dependencias externas) para
+**United Trade Solutions LLC** y **Prime Commercial Link LLC**. Inglés por defecto, con
+selector EN/ES persistente (localStorage).
 
 ## Estructura
 
 ```
-index.html          ← landing completa (hero, empresas, categorías, flujo,
-                       pagos, protocolo de verificación, cumplimiento, FAQ, contacto)
-terms.html           ← Términos y Condiciones, bilingüe
-privacy.html          ← Política de Privacidad, bilingüe
-css/styles.css        ← un solo archivo de estilos, tema oscuro/teal
-js/script.js           ← menú móvil, selector de idioma, acordeón de FAQ
-assets/favicon.svg
-robots.txt / sitemap.xml
+public/                ← ÚNICA carpeta que se publica
+  index.html           ← landing (hero, empresas, categorías, flujo, pagos, protocolo, FAQ, contacto)
+  terms.html           ← Términos y Condiciones
+  privacy.html         ← Política de Privacidad
+  404.html             ← página de error
+  css/styles.css
+  js/script.js
+  assets/favicon.svg
+  robots.txt
+  _headers             ← cabeceras de seguridad (Cloudflare Pages)
+  .well-known/security.txt
+README.md              ← NO se publica
 ```
 
-## Cómo funciona el bilingüe
+## Despliegue (Cloudflare Pages)
 
-Cada bloque de texto está duplicado con `data-lang="en"` / `data-lang="es"`.
-El atributo `data-lang` en `<html>` decide cuál se muestra (CSS puro, sin
-recargar la página). El botón EN/ES en el header guarda la preferencia en
-`localStorage` para que el idioma se mantenga en la siguiente visita.
+- Framework preset: **None** · Build command: *(vacío)* · Build output directory: **`public`**
+- El archivo `public/_headers` aplica CSP, HSTS, X-Frame-Options, etc.
 
-Al editar contenido: cada texto nuevo necesita su par en el otro idioma con
-el mismo `data-lang`, o desaparecerá en uno de los dos modos.
+## Seguridad aplicada en el código
 
-## Contenido pendiente antes de publicar
+- CSP estricta (solo recursos propios, sin inline scripts/styles, sin formularios, sin iframes).
+- Sin dependencias ni recursos de terceros (no CDNs, no fuentes externas, no analítica).
+- Sin `innerHTML`/`eval`; Trusted Types exigido.
+- Aviso antifraude: nunca se cambian datos bancarios por correo.
 
-- Correo oficial de **Prime Commercial Link LLC** (hoy dice "próximamente/coming soon")
-  en `index.html` (sección "Nuestras Empresas") y en `terms.html`.
-- Confirmar que `unitedts94@gmail.com` es el correo de contacto definitivo, o
-  reemplazarlo por un dominio corporativo propio.
-- El `<link rel="canonical">` y `og:url` en `index.html` apuntan a
-  `plbroker.disrupthings.com` — actualizar si el dominio final es otro.
-- Revisión legal final de `terms.html` y `privacy.html` por un abogado
-  licenciado en Nueva Jersey antes de operar con el público.
+## Pendiente al tener dominio propio
+
+1. En `public/index.html` agregar `<link rel="canonical">` y `og:url` con el dominio.
+2. Crear `public/sitemap.xml` y añadir `Sitemap:` en `public/robots.txt`.
+3. Añadir `Canonical:` en `public/.well-known/security.txt` (renovar `Expires` cada año).
+4. Correos con dominio propio + SPF/DKIM/DMARC `p=reject`; actualizar los correos del sitio.
 
 ## Probar en local
 
 ```bash
-python3 -m http.server 8080
-# http://localhost:8080
+cd public && python3 -m http.server 8080
 ```
 
-## Despliegue
-
-Mismo flujo que el resto de los sitios estáticos del stack: contenedor
-`nginx:alpine` detrás de Nginx/Cloudflare, o GitHub Pages si se prefiere
-hosting gratuito. No requiere build ni variables de entorno.
+Al editar contenido: cada texto necesita su par `data-lang="en"` / `data-lang="es"`.
+Al cambiar CSS/JS, subir el `?v=` en los `<link>`/`<script>` de los HTML.

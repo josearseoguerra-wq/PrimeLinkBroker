@@ -1,4 +1,0 @@
-User-agent: *
-Allow: /
-
-Sitemap: https://plbroker.disrupthings.com/sitemap.xml
