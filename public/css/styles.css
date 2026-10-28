@@ -95,6 +95,8 @@ h2{font-size:clamp(34px,4vw,52px);line-height:1.08;letter-spacing:-.045em;margin
 .contact-card{display:flex;align-items:center;justify-content:space-between;gap:35px;padding:55px;border-radius:24px;background:linear-gradient(120deg,#10263a,#0d1a2a);border:1px solid rgba(255,255,255,.1);color:#fff}
 .contact-card h2{font-size:40px}
 .contact-card p:not(.eyebrow){color:#a9b7c9;max-width:620px}
+.contact-actions{display:flex;flex-direction:column;gap:12px;flex-shrink:0}
+.contact-actions .button{justify-content:space-between;min-width:190px}
 .footer{background:#050c15;color:#91a0b3;padding:55px 0 22px}
 .footer-grid{display:flex;justify-content:space-between;gap:50px}
 .footer-brand{margin-bottom:20px}
@@ -264,3 +266,4 @@ h2{font-size:clamp(34px,4vw,52px);line-height:1.08;letter-spacing:-.045em;margin
   .category-card h4{font-size:13px}
   .contact-card h2{font-size:28px}
 }
+@media(max-width:520px){.contact-actions{width:100%}.contact-actions .button{width:100%}}
