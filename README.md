@@ -9,46 +9,41 @@ selector EN/ES persistente (localStorage).
 ```
 public/                ← ÚNICA carpeta que se publica
   index.html           ← landing (hero, empresas, categorías, flujo, pagos, protocolo, FAQ, contacto)
-  terms.html           ← Términos y Condiciones
-  privacy.html         ← Política de Privacidad
-  404.html             ← página de error
-  css/styles.css
-  js/script.js
-  assets/favicon.svg
-  robots.txt
-  _headers             ← cabeceras de seguridad (Cloudflare Pages)
+  terms.html / privacy.html / 404.html
+  css/styles.css · js/script.js · assets/favicon.svg
+  robots.txt · sitemap.xml
   .well-known/security.txt
 README.md              ← NO se publica
 ```
 
-## Despliegue actual (GitHub Pages)
+## Producción
 
-El workflow `.github/workflows/pages.yml` publica **solo** `public/` en cada push a `main`
-que modifique esa carpeta. Requiere repo público (plan gratuito) y
-Settings → Pages → Source: **GitHub Actions**. GitHub Pages ignora `_headers`;
-la CSP por `<meta>` sí aplica.
-
-## Despliegue futuro (Cloudflare Pages)
-
-Al migrar: borrar `.github/workflows/pages.yml`, despublicar GitHub Pages y poner el repo en privado.
-
-
-- Framework preset: **None** · Build command: *(vacío)* · Build output directory: **`public`**
-- El archivo `public/_headers` aplica CSP, HSTS, X-Frame-Options, etc.
+- Dominio: **https://utspcl.com** (registrador GoDaddy, DNS en Cloudflare: dean / selah.ns.cloudflare.com).
+- Hosting: **GitHub Pages** con el workflow `.github/workflows/pages.yml`, que publica solo
+  `public/` (incluye `.well-known/`). Settings → Pages: Source = GitHub Actions,
+  Custom domain = `utspcl.com`, Enforce HTTPS activo. Dominio verificado en la cuenta.
+- Cloudflare delante (proxy naranja): SSL **Full (strict)**, Always Use HTTPS, TLS ≥ 1.2,
+  redirección 301 `www` → raíz, DNSSEC activo (DS en GoDaddy).
+- Cabeceras de seguridad (CSP, HSTS, X-Frame-Options, Referrer-Policy, Permissions-Policy,
+  COOP) en **Cloudflare → Reglas de transformación**. La CSP también va en `<meta>`.
+- **No activar** en Cloudflare: ofuscación de correos, Bot Fight Mode, Rocket Loader,
+  AI Labyrinth (inyectan scripts que la CSP bloquea).
+- Correo del dominio bloqueado contra falsificación (SPF `-all`, DKIM vacío, DMARC `reject`)
+  hasta que se contrate correo propio.
 
 ## Seguridad aplicada en el código
 
 - CSP estricta (solo recursos propios, sin inline scripts/styles, sin formularios, sin iframes).
 - Sin dependencias ni recursos de terceros (no CDNs, no fuentes externas, no analítica).
 - Sin `innerHTML`/`eval`; Trusted Types exigido.
+- Acciones del workflow fijadas por SHA.
 - Aviso antifraude: nunca se cambian datos bancarios por correo.
 
-## Pendiente al tener dominio propio
+## Mantenimiento
 
-1. En `public/index.html` agregar `<link rel="canonical">` y `og:url` con el dominio.
-2. Crear `public/sitemap.xml` y añadir `Sitemap:` en `public/robots.txt`.
-3. Añadir `Canonical:` en `public/.well-known/security.txt` (renovar `Expires` cada año).
-4. Correos con dominio propio + SPF/DKIM/DMARC `p=reject`; actualizar los correos del sitio.
+- Renovar `Expires` de `public/.well-known/security.txt` antes de la fecha indicada.
+- Al contratar correo con dominio propio: ajustar SPF/DKIM/DMARC en Cloudflare y
+  actualizar los correos del sitio y del aviso antifraude.
 
 ## Probar en local
 
